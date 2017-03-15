@@ -32,11 +32,13 @@ namespace AutofacInterceptorPoc
             builder
                 .RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterType<ConsoleLoggingInterceptor>().InstancePerDependency();
+            builder.RegisterType<RetryInterceptor>().InstancePerDependency();
             builder
                 .RegisterType<ValuesRepository>()
                 .As<IValuesRepository>()
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(ConsoleLoggingInterceptor))
+                .InterceptedBy(typeof(RetryInterceptor))
                 .SingleInstance();
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

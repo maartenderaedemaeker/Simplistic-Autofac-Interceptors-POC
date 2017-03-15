@@ -1,10 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AutofacInterceptorPoc.CustomAttributes;
 
 namespace AutofacInterceptorPoc.Repositories
 {
     public class ValuesRepository : IValuesRepository
     {
+        private readonly Random _random = new Random();
         private List<string> Values { get; } = new List<string>();
+
+        [Retry(5)]
+        public string PotentialyInstableMethod()
+        {
+            if (_random.Next(2) != 0)
+            {
+                throw new Exception("Bad luck...");
+            }
+            return "Lucky!";
+        }
         public IEnumerable<string> Get()
         {
             return Values;

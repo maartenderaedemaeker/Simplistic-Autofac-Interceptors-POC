@@ -9,5 +9,6 @@ namespace AutofacInterceptorPoc.Repositories
         void Post(string value);
         void Put(int id, string value);
         void Delete(int id);
+        string PotentialyInstableMethod();
     }
 }

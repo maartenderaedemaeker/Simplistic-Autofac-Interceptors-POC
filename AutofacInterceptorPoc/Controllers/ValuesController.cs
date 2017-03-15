@@ -4,6 +4,7 @@ using AutofacInterceptorPoc.Repositories;
 
 namespace AutofacInterceptorPoc.Controllers
 {
+    [RoutePrefix("api/values")]
     public class ValuesController : ApiController
     {
         private readonly IValuesRepository _valuesRepository;
@@ -40,6 +41,13 @@ namespace AutofacInterceptorPoc.Controllers
         public void Delete(int id)
         {
             _valuesRepository.Delete(id);
+        }
+
+        [HttpGet]
+        [Route("unstable")]
+        public string UnstableTest()
+        {
+            return _valuesRepository.PotentialyInstableMethod();
         }
     }
 }
