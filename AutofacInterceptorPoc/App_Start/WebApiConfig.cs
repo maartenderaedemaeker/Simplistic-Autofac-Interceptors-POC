@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using System.Web.Http;
 using Autofac;
+using Autofac.Extras.DynamicProxy;
 using Autofac.Integration.WebApi;
+using AutofacInterceptorPoc.Interceptors;
 using AutofacInterceptorPoc.Repositories;
 
 namespace AutofacInterceptorPoc
@@ -27,8 +29,15 @@ namespace AutofacInterceptorPoc
         private static void SetupIoc(HttpConfiguration config)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterType<ValuesRepository>().As<IValuesRepository>().SingleInstance();
+            builder
+                .RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterType<ConsoleLoggingInterceptor>().InstancePerDependency();
+            builder
+                .RegisterType<ValuesRepository>()
+                .As<IValuesRepository>()
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(ConsoleLoggingInterceptor))
+                .SingleInstance();
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
